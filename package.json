@@ -1,12 +1,11 @@
 {
-  "name": "devcamper",
+  "name": "devcamper_api",
   "version": "1.0.0",
   "description": "\"NODE.js project\"",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "SET NODE_ENV=production & node server",
+    "dev": "nodemon server"
   },
   "author": "Zoltan Szokodi",
   "license": "MIT",

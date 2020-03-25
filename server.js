@@ -4,15 +4,16 @@ const morgan = require('morgan');
 const colors = require('colors');
 const dotenv = require('dotenv');
 
+// Load env variables
 dotenv.config({path: './config/config.env'});
 
 const app = express();
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Hello there!');
-});
+const bootcamps = require('./routes/bootcamps');
+
+app.use('/api/v1/bootcamps', bootcamps);
 
 process.env.NODE_ENV === 'development' && app.use(morgan('dev'));
 
