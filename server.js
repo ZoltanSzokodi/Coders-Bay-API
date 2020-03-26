@@ -2,6 +2,7 @@ const express = require('express');
 const colors = require('colors');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 
 // Load env variables
@@ -9,6 +10,7 @@ dotenv.config({path: './config/config.env'});
 
 const app = express();
 
+// before you would have to install the body-parser package but now it's included
 app.use(express.json());
 
 if (process.env.NODE_ENV === 'development') {
@@ -20,6 +22,8 @@ connectDB();
 const bootcamps = require('./routes/bootcamps');
 
 app.use('/api/v1/bootcamps', bootcamps);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
