@@ -9,16 +9,39 @@ const asyncHandler = require('../middleware/async');
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
   let query;
 
-  // 1) extract the query params (after the ? in the URL) and stringify
-  let queryStr = JSON.stringify(req.query);
+  // Copy request.query
+  const requestQuery = {...req.query};
 
-  // 2) add $ sign to params
+  // fields to exclude
+  const removeFields = ['select', 'sort'];
+
+  // loop over removeFields and delete them from requestQuery
+  removeFields.forEach(param => delete requestQuery[param]);
+
+  // extract the query params (after the ? in the URL) and stringify
+  let queryStr = JSON.stringify(requestQuery);
+
+  // add $ sign to params (create operators -> gt, gte, lt etc...)
   queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
-  // 3) parse it back to json
+  // parse it back to json
   query = Bootcamp.find(JSON.parse(queryStr));
 
-  // 4) find bootcamps according to query params
+  // select fields
+  if (req.query.select) {
+    const fields = req.query.select.split(',').join(' ');
+    query = query.select(fields);
+  }
+
+  // sort
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(',').join(' ');
+    query = query.sort(sortBy);
+  } else {
+    query = query.sort('-createdAt');
+  }
+
+  // find bootcamps according to query params
   const bootcamps = await query;
 
   res.status(200).json({
