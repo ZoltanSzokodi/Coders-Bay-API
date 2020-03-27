@@ -7,7 +7,19 @@ const asyncHandler = require('../middleware/async');
 // @route   GET /api/v1/bootcamps
 // @access  Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
-  const bootcamps = await Bootcamp.find();
+  let query;
+
+  // 1) extract the query params (after the ? in the URL) and stringify
+  let queryStr = JSON.stringify(req.query);
+
+  // 2) add $ sign to params
+  queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+
+  // 3) parse it back to json
+  query = Bootcamp.find(JSON.parse(queryStr));
+
+  // 4) find bootcamps according to query params
+  const bootcamps = await query;
 
   res.status(200).json({
     success: true,
