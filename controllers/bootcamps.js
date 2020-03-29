@@ -9,11 +9,12 @@ const asyncHandler = require('../middleware/async');
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
   let query;
 
-  // Copy request.query
+  // Copy req.query so we don't change the original
   const requestQuery = {...req.query};
 
-  // fields to exclude
-  const removeFields = ['select', 'sort'];
+  // fields to exclude from the copy of req.query (the original will still hold them)
+  // we need to remove them because mongoose will try to match them with actuall fields in the document
+  const removeFields = ['select', 'sort', 'page', 'limit'];
 
   // loop over removeFields and delete them from requestQuery
   removeFields.forEach(param => delete requestQuery[param]);
@@ -41,12 +42,39 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     query = query.sort('-createdAt');
   }
 
-  // find bootcamps according to query params
+  // Pagination
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = parseInt(req.query.limit, 10) || 25;
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+  const total = await Bootcamp.countDocuments();
+
+  query = query.skip(startIndex).limit(limit);
+
+  // Execute the query
   const bootcamps = await query;
+
+  // Pagination result
+  const pagination = {};
+
+  if (endIndex < total) {
+    pagination.next = {
+      page: page + 1,
+      limit
+    };
+  }
+
+  if (startIndex > 0) {
+    pagination.prev = {
+      page: page - 1,
+      limit
+    };
+  }
 
   res.status(200).json({
     success: true,
     count: bootcamps.length,
+    pagination,
     data: bootcamps
   });
 });
