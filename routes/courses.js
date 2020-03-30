@@ -8,7 +8,7 @@ const {
   deleteCourse
 } = require('../controllers/courses');
 
-const Course = require('../model/Course');
+const Course = require('../models/Course');
 const advancedResults = require('../middleware/advancedResults');
 
 router

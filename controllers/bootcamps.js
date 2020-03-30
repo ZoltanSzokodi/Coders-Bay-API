@@ -1,4 +1,4 @@
-const Bootcamp = require('../model/Bootcamp');
+const Bootcamp = require('../models/Bootcamp');
 const geocoder = require('../utils/geocoder');
 const path = require('path');
 const ErrorResponse = require('../utils/errorResponse');

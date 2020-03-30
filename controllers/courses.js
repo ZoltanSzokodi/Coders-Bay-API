@@ -1,5 +1,5 @@
-const Course = require('../model/Course');
-const Bootcamp = require('../model/Bootcamp');
+const Course = require('../models/Course');
+const Bootcamp = require('../models/Bootcamp');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 
