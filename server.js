@@ -1,5 +1,7 @@
 const express = require('express');
 const colors = require('colors');
+const path = require('path');
+const fileUpload = require('express-fileupload');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const errorHandler = require('./middleware/error');
@@ -9,6 +11,7 @@ const connectDB = require('./config/db');
 dotenv.config({path: './config/config.env'});
 
 const app = express();
+connectDB();
 
 // before you would have to install the body-parser package but now it's included
 app.use(express.json());
@@ -17,7 +20,11 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-connectDB();
+// File uploading
+app.use(fileUpload());
+
+// Set static folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 const bootcamps = require('./routes/bootcamps');
 const courses = require('./routes/courses');
