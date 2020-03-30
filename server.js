@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'development') {
 // File uploading
 app.use(fileUpload());
 
-// Set static folder
+// Set static folder - for images
 app.use(express.static(path.join(__dirname, 'public')));
 
 const bootcamps = require('./routes/bootcamps');
