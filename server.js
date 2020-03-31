@@ -2,6 +2,7 @@ const express = require('express');
 const colors = require('colors');
 const path = require('path');
 const fileUpload = require('express-fileupload');
+const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const errorHandler = require('./middleware/error');
@@ -22,6 +23,9 @@ if (process.env.NODE_ENV === 'development') {
 
 // File uploading
 app.use(fileUpload());
+
+// Cookie parser
+app.use(cookieParser());
 
 // Set static folder - for images
 app.use(express.static(path.join(__dirname, 'public')));
