@@ -6,5 +6,16 @@ const asyncHandler = require('../middleware/async');
 // @route   GET /api/v1/auth/register
 // @access  Public
 exports.register = asyncHandler(async (req, res, next) => {
-  res.status(200).json({success: true});
+  const {name, email, role, password} = req.body;
+
+  const user = await User.create({
+    name,
+    email,
+    role,
+    password
+  });
+
+  res.status(200).json({
+    success: true
+  });
 });
