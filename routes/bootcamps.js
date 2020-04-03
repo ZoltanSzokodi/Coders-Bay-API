@@ -11,9 +11,9 @@ const {
 } = require('../controllers/bootcamps');
 
 const Bootcamp = require('../models/Bootcamp');
-const advancedResults = require('../middleware/advancedResults');
 
-// Authorization
+// Middlewares
+const advancedResults = require('../middleware/advancedResults');
 const {protect, authorize} = require('../middleware/auth');
 
 // Include other resource routers
