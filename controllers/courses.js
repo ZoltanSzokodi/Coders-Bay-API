@@ -21,6 +21,7 @@ exports.getCourses = asyncHandler(async (req, res, next) => {
     res.status(200).json(res.advancedResults);
   }
 });
+
 // @desc    Get a single coure
 // @route   GET /api/v1/course/:id
 // @access  Public
@@ -39,6 +40,7 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
     data: course
   });
 });
+
 // @desc    Add a course
 // @route   POST /api/v1/bootcamps/:bootcampId/courses
 // @access  Private
@@ -74,6 +76,7 @@ exports.addCourse = asyncHandler(async (req, res, next) => {
     data: course
   });
 });
+
 // @desc    Update a course
 // @route   PUT /api/v1/courses/:id
 // @access  Private
@@ -104,6 +107,7 @@ exports.updateCourse = asyncHandler(async (req, res, next) => {
     data: course
   });
 });
+
 // @desc    Delete a course
 // @route   DELETE /api/v1/courses/:id
 // @access  Private
