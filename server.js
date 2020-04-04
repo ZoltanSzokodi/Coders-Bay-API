@@ -1,11 +1,14 @@
 const express = require('express');
 const colors = require('colors');
+const cors = require('cors');
 const path = require('path');
 const fileUpload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const xss = require('xss-clean');
+const hpp = require('hpp');
+const rateLimit = require('express-rate-limit');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const errorHandler = require('./middleware/error');
@@ -38,6 +41,19 @@ app.use(helmet());
 
 // Prevent XSS (cross-site scripting) attacks
 app.use(xss());
+
+// Enable CORS
+app.use(cors());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 mins
+  max: 100
+});
+app.use(limiter);
+
+// Prevent http param polution
+app.use(hpp());
 
 // Set static folder - for images
 app.use(express.static(path.join(__dirname, 'public')));
