@@ -25,6 +25,7 @@ exports.getUser = asyncHandler(async (req, res, next) => {
 // @route   POST /api/v1/users
 // @access  Private/Admin
 exports.createUser = asyncHandler(async (req, res, next) => {
+  console.log(req.user.role);
   const user = await User.create(req.body);
 
   res.status(201).json({

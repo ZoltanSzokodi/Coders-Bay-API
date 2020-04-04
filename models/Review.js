@@ -52,21 +52,21 @@ ReviewSchema.statics.getAverageRating = async function(bootcampId) {
 
   try {
     await this.model('Bootcamp').findByIdAndUpdate(bootcampId, {
-      averageRating: obj[0].averageRating
+      averageRating: obj.length > 0 ? obj[0].averageRating : 0
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.error(err);
   }
 };
 
-// Call getAverageRating after save
-ReviewSchema.post('save', async function() {
-  await this.constructor.getAverageRating(this.bootcamp);
+// Call getAverageCost after save
+ReviewSchema.post('save', function() {
+  this.constructor.getAverageRating(this.bootcamp);
 });
 
-// Call getAverageRating before delete
-ReviewSchema.pre('remove', async function() {
-  await this.constructor.getAverageRating(this.bootcamp);
+// Call getAverageCost before remove
+ReviewSchema.pre('remove', function() {
+  this.constructor.getAverageRating(this.bootcamp);
 });
 
 module.exports = mongoose.model('Review', ReviewSchema);
