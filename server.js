@@ -4,6 +4,8 @@ const path = require('path');
 const fileUpload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
+const xss = require('xss-clean');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const errorHandler = require('./middleware/error');
@@ -30,6 +32,12 @@ app.use(cookieParser());
 
 // Sanitize data
 app.use(mongoSanitize());
+
+// Set security headers
+app.use(helmet());
+
+// Prevent XSS (cross-site scripting) attacks
+app.use(xss());
 
 // Set static folder - for images
 app.use(express.static(path.join(__dirname, 'public')));
