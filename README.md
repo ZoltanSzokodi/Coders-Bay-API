@@ -1,12 +1,12 @@
 # Codersbay API
-API built with Node.js, MongoDB and Mongoose for Object Data Modelling
+Backend API built with Node.js, MongoDB and Mongoose for Object Data Modelling
 
 ## How to try it out
-Since I there is no front-end (yet) the simplest way to test the endpoints is to fire up Postman and start sending requests.
+Since there is no front-end (yet) the simplest way to test the endpoints is to fire up Postman and start sending requests.
 Please check the documentation (created with the help of DocGen) for further instructions.
 
 ## How to fire it up
-Clone the repo, add your own credentialt to the config/config.env file. Run npm install in the root to add dependencies
+Clone the repo, add your own credentials to the config/config.env file. Run npm install in the root to add dependencies
 
 Dev mode
 ```
