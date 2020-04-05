@@ -24,7 +24,7 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    data: bootcamp
+    data: bootcamp,
   });
 });
 // @desc    Create a new bootcamp
@@ -50,7 +50,7 @@ exports.postBootcamp = asyncHandler(async (req, res, next) => {
 
   res.status(201).json({
     success: true,
-    data: bootcamp
+    data: bootcamp,
   });
 });
 // @desc    Modify a bootcamp
@@ -76,12 +76,12 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
 
   bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
-    runValidators: true
+    runValidators: true,
   });
 
   res.status(200).json({
     success: true,
-    data: bootcamp
+    data: bootcamp,
   });
 });
 // @desc    Remove a bootcamp
@@ -109,7 +109,7 @@ exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    data: {}
+    data: {},
   });
 });
 // @desc    Get bootcamps within a radius
@@ -126,20 +126,20 @@ exports.getBootcampsInRadius = asyncHandler(async (req, res, next) => {
   // calc radius using radians
   // divide distance by radius og Earth
   // Earth raius = 3,963 mi | 6,378 km
-  const radius = distance / 6378;
+  const radius = distance / 3963;
 
   const bootcamps = await Bootcamp.find({
     location: {
       $geoWithin: {
-        $centerSphere: [[lng, lat], radius]
-      }
-    }
+        $centerSphere: [[lng, lat], radius],
+      },
+    },
   });
 
   res.status(200).json({
     success: true,
     count: bootcamps.length,
-    data: bootcamps
+    data: bootcamps,
   });
 });
 // @desc    Upload a bootcamp photo
@@ -186,7 +186,7 @@ exports.bootcampPhotoUpload = asyncHandler(async (req, res, next) => {
   // Create custom file name
   file.name = `photo_${bootcamp._id}${path.parse(file.name).ext}`;
 
-  file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async err => {
+  file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (err) => {
     if (err) {
       console.error(err);
       return next(new ErrorResponse(`Problem with file upload`, 500));
@@ -196,7 +196,7 @@ exports.bootcampPhotoUpload = asyncHandler(async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: file.name
+      data: file.name,
     });
   });
 });
