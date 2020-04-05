@@ -1,4 +1,4 @@
-# Coders-Bay-API
+# Codersbay-API
 API built with Node.js, MongoDB and Mongoose for Object Data Modelling
 
 # How to try it out
