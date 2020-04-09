@@ -15,7 +15,7 @@ const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 
 // Load env variables
-dotenv.config({path: './config/config.env'});
+dotenv.config({ path: './config/config.env' });
 
 const app = express();
 connectDB();
@@ -48,7 +48,7 @@ app.use(cors());
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 mins
-  max: 100
+  max: 100,
 });
 app.use(limiter);
 

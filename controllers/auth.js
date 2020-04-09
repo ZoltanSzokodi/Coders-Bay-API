@@ -8,13 +8,13 @@ const asyncHandler = require('../middleware/async');
 // @route   POST /api/v1/auth/register
 // @access  Public
 exports.register = asyncHandler(async (req, res, next) => {
-  const {name, email, role, password} = req.body;
+  const { name, email, role, password } = req.body;
 
   const user = await User.create({
     name,
     email,
     role,
-    password
+    password,
   });
 
   sendTokenResponse(user, 200, res);
@@ -24,7 +24,7 @@ exports.register = asyncHandler(async (req, res, next) => {
 // @route   POST /api/v1/auth/login
 // @access  Public
 exports.login = asyncHandler(async (req, res, next) => {
-  const {name, email, password} = req.body;
+  const { name, email, password } = req.body;
 
   // Validate email and password
   if (!email || !password) {
@@ -32,7 +32,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   }
 
   // Check for user
-  const user = await User.findOne({email}).select('+password');
+  const user = await User.findOne({ email }).select('+password');
 
   if (!user) {
     return next(new ErrorResponse('Invalid credentials', 401));
@@ -56,7 +56,7 @@ exports.getMe = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    data: user
+    data: user,
   });
 });
 
@@ -66,17 +66,17 @@ exports.getMe = asyncHandler(async (req, res, next) => {
 exports.updateDetails = asyncHandler(async (req, res, next) => {
   const fieldsToUpdate = {
     name: req.body.name,
-    email: req.body.email
+    email: req.body.email,
   };
 
   const user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
     new: true,
-    runValidators: true
+    runValidators: true,
   });
 
   res.status(200).json({
     success: true,
-    data: user
+    data: user,
   });
 });
 
@@ -101,7 +101,7 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
 // @route   POST /api/v1/auth/forgotpassword
 // @access  Public
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
-  const user = await User.findOne({email: req.body.email});
+  const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
     return next(new ErrorResponse(`There is no user with that email`, 404));
@@ -110,7 +110,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   // Get reset token
   const resetToken = user.getResetPasswordToken();
 
-  await user.save({validateBeforeSave: false});
+  await user.save({ validateBeforeSave: false });
 
   // Create reset url
   const resetUrl = `${req.protocol}://${req.get(
@@ -123,19 +123,19 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     await sendEmail({
       email: user.email,
       subject: 'Password reset token',
-      message
+      message,
     });
 
     res.status(200).json({
       success: true,
-      data: 'Email sent'
+      data: 'Email sent',
     });
   } catch (error) {
     console.log(error);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
 
-    await user.save({validateBeforeSave: false});
+    await user.save({ validateBeforeSave: false });
 
     return next(new ErrorResponse('Email could not be sent', 500));
   }
@@ -153,7 +153,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 
   const user = await User.findOne({
     resetPasswordToken,
-    resetPasswordExpire: {$gte: Date.now()}
+    resetPasswordExpire: { $gte: Date.now() },
   });
 
   if (!user) {
@@ -175,12 +175,12 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 exports.logout = asyncHandler(async (req, res, next) => {
   res.cookie('token', 'none', {
     expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true
+    httpOnly: true,
   });
 
   res.status(200).json({
     success: true,
-    data: {}
+    data: {},
   });
 });
 
@@ -193,18 +193,15 @@ const sendTokenResponse = (user, statusCode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
     ),
-    httpOnly: true
+    httpOnly: true,
   };
 
   if (process.env.NODE_ENV === 'production') {
     options.secure = true;
   }
 
-  res
-    .status(statusCode)
-    .cookie('token', token, options)
-    .json({
-      success: true,
-      token
-    });
+  res.status(statusCode).cookie('token', token, options).json({
+    success: true,
+    token,
+  });
 };
